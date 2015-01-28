@@ -1,12 +1,15 @@
 +----------------------------------------+
 | BtOgre - Simple Bullet-Ogre connection |
 +----------------------------------------+
-###Description
+Description
+-----------
 BtOgre is a simple Bullet-Ogre connection.
 
-###Dependencies
+Dependencies
+------------
 - None
 
-###Build Instructions
+Build Instructions
+------------------
 To build the demo, edit 'premake.lua' to suit your setup, and run premake v3.7
 (http://premake.sourceforge.net/download) on it.
