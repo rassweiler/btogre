@@ -27,12 +27,12 @@ namespace BtOgre {
  * =============================================================================================
  */
 
-	void VertexIndexToShape::addStaticVertexData(const VertexData *vertex_data)
+	void VertexIndexToShape::addStaticVertexData(const v1::VertexData *vertex_data)
 	{
 		if (!vertex_data)
 			return;
 
-		const VertexData *data = vertex_data;
+		const v1::VertexData *data = vertex_data;
 
 		const unsigned int prev_size = mVertexCount;
 		mVertexCount += (unsigned int)data->vertexCount;
@@ -47,11 +47,11 @@ namespace BtOgre {
 
 		// Get the positional buffer element
 		{
-			const Ogre::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
-			Ogre::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
+			const Ogre::v1::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
+			Ogre::v1::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
 			const unsigned int vSize = (unsigned int)vbuf->getVertexSize();
 
-			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::v1::HardwareBuffer::HBL_READ_ONLY));
 			float* pReal;
 			Ogre::Vector3 * curVertices = &mVertexBuffer[prev_size];
 			const unsigned int vertexCount = (unsigned int)data->vertexCount;
@@ -72,14 +72,14 @@ namespace BtOgre {
 		}
 	}
 	//------------------------------------------------------------------------------------------------
-	void VertexIndexToShape::addAnimatedVertexData(const Ogre::VertexData *vertex_data,
-												   const Ogre::VertexData *blend_data,
-												   const Ogre::Mesh::IndexMap *indexMap)
+	void VertexIndexToShape::addAnimatedVertexData(const Ogre::v1::VertexData *vertex_data,
+												   const Ogre::v1::VertexData *blend_data,
+												   const Ogre::v1::Mesh::IndexMap *indexMap)
 	{
 		// Get the bone index element
 		assert(vertex_data);
 
-		const VertexData *data = blend_data;
+		const v1::VertexData *data = blend_data;
 		const unsigned int prev_size = mVertexCount;
 		mVertexCount += (unsigned int)data->vertexCount;
 		Ogre::Vector3* tmp_vert = new Ogre::Vector3[mVertexCount];
@@ -92,12 +92,12 @@ namespace BtOgre {
 
 		// Get the positional buffer element
 		{
-			const Ogre::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
+			const Ogre::v1::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
 			assert (posElem);
-			Ogre::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
+			Ogre::v1::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
 			const unsigned int vSize = (unsigned int)vbuf->getVertexSize();
 
-			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::v1::HardwareBuffer::HBL_READ_ONLY));
 			float* pReal;
 			Ogre::Vector3 * curVertices = &mVertexBuffer[prev_size];
 			const unsigned int vertexCount = (unsigned int)data->vertexCount;
@@ -117,12 +117,12 @@ namespace BtOgre {
 			vbuf->unlock();
 		}
 		{
-			const Ogre::VertexElement* bneElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_BLEND_INDICES);
+			const Ogre::v1::VertexElement* bneElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_BLEND_INDICES);
 			assert (bneElem);
 
-			Ogre::HardwareVertexBufferSharedPtr vbuf = vertex_data->vertexBufferBinding->getBuffer(bneElem->getSource());
+			Ogre::v1::HardwareVertexBufferSharedPtr vbuf = vertex_data->vertexBufferBinding->getBuffer(bneElem->getSource());
 			const unsigned int vSize = (unsigned int)vbuf->getVertexSize();
-			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+			unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::v1::HardwareBuffer::HBL_READ_ONLY));
 
 			unsigned char* pBone;
 
@@ -159,7 +159,7 @@ namespace BtOgre {
 		}
 	}
 	//------------------------------------------------------------------------------------------------
-	void VertexIndexToShape::addIndexData(IndexData *data, const unsigned int offset)
+	void VertexIndexToShape::addIndexData(v1::IndexData *data, const unsigned int offset)
 	{
 		const unsigned int prev_size = mIndexCount;
 		mIndexCount += (unsigned int)data->indexCount;
@@ -173,13 +173,13 @@ namespace BtOgre {
 		mIndexBuffer = tmp_ind;
 
 		const unsigned int numTris = (unsigned int) data->indexCount / 3;
-		HardwareIndexBufferSharedPtr ibuf = data->indexBuffer;
-		const bool use32bitindexes = (ibuf->getType() == HardwareIndexBuffer::IT_32BIT);
+		v1::HardwareIndexBufferSharedPtr ibuf = data->indexBuffer;
+		const bool use32bitindexes = (ibuf->getType() == v1::HardwareIndexBuffer::IT_32BIT);
 		unsigned int index_offset = prev_size;
 
 		if (use32bitindexes)
 		{
-			const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
+			const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(v1::HardwareBuffer::HBL_READ_ONLY));
 			for(unsigned int k = 0; k < numTris; ++k)
 			{
 				mIndexBuffer[index_offset ++] = offset + *pInt++;
@@ -190,7 +190,7 @@ namespace BtOgre {
 		}
 		else
 		{
-			const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
+			const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(v1::HardwareBuffer::HBL_READ_ONLY));
 			for(unsigned int k = 0; k < numTris; ++k)
 			{
 				mIndexBuffer[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
@@ -326,7 +326,7 @@ namespace BtOgre {
 		unsigned int *indices = mIndexBuffer;
 		Vector3 *vertices = mVertexBuffer;
 
-		btVector3    vertexPos[3];
+		btVector3 vertexPos[3];
 		for (unsigned int n = 0; n < numFaces; ++n)
 		{
 			{
@@ -356,7 +356,7 @@ namespace BtOgre {
 		const bool useQuantizedAABB = true;
 		btBvhTriangleMeshShape *shape = new btBvhTriangleMeshShape(trimesh, useQuantizedAABB);
 
-	        shape->setLocalScaling(Convert::toBullet(mScale));
+			shape->setLocalScaling(Convert::toBullet(mScale));
 
 		return shape;
 	}
@@ -435,7 +435,7 @@ namespace BtOgre {
 	{
 	}
 	//------------------------------------------------------------------------------------------------
-	StaticMeshToShapeConverter::StaticMeshToShapeConverter(Entity *entity,  const Matrix4 &transform) :
+	StaticMeshToShapeConverter::StaticMeshToShapeConverter(v1::Entity *entity, const Matrix4 &transform) :
 		VertexIndexToShape(transform),
 		mEntity (0),
 		mNode (0)
@@ -448,15 +448,15 @@ namespace BtOgre {
 		mEntity (0),
 		mNode (0)
 	{
-		RenderOperation op;
-		rend->getRenderOperation(op);
+		v1::RenderOperation op;
+		rend->getRenderOperation(op, false);
 		VertexIndexToShape::addStaticVertexData(op.vertexData);
 		if(op.useIndexes)
 			VertexIndexToShape::addIndexData(op.indexData);
 
 	}
 	//------------------------------------------------------------------------------------------------
-	void StaticMeshToShapeConverter::addEntity(Entity *entity,const Matrix4 &transform)
+	void StaticMeshToShapeConverter::addEntity(v1::Entity *entity,const Matrix4 &transform)
 	{
 		// Each entity added need to reset size and radius
 		// next time getRadius and getSize are asked, they're computed.
@@ -468,29 +468,29 @@ namespace BtOgre {
 		mTransform = transform;
 		mScale = mNode ? mNode->getScale() : Ogre::Vector3(1,1,1);
 
-		if (mEntity->getMesh()->sharedVertexData)
+		if (mEntity->getMesh()->sharedVertexData[0])
 		{
-			VertexIndexToShape::addStaticVertexData (mEntity->getMesh()->sharedVertexData);
+			VertexIndexToShape::addStaticVertexData (mEntity->getMesh()->sharedVertexData[0]);
 		}
 
 		for (unsigned int i = 0;i < mEntity->getNumSubEntities();++i)
 		{
-			SubMesh *sub_mesh = mEntity->getSubEntity(i)->getSubMesh();
+			v1::SubMesh *sub_mesh = mEntity->getSubEntity(i)->getSubMesh();
 
 			if (!sub_mesh->useSharedVertices)
 			{
-				VertexIndexToShape::addIndexData(sub_mesh->indexData, mVertexCount);
-				VertexIndexToShape::addStaticVertexData (sub_mesh->vertexData);
+				VertexIndexToShape::addIndexData(sub_mesh->indexData[0], mVertexCount);
+				VertexIndexToShape::addStaticVertexData (sub_mesh->vertexData[0]);
 			}
 			else
 			{
-				VertexIndexToShape::addIndexData (sub_mesh->indexData);
+				VertexIndexToShape::addIndexData (sub_mesh->indexData[0]);
 			}
 
 		}
 	}
 	//------------------------------------------------------------------------------------------------
-	void StaticMeshToShapeConverter::addMesh(const MeshPtr &mesh, const Matrix4 &transform)
+	void StaticMeshToShapeConverter::addMesh(const v1::Mesh *mesh, const Matrix4 &transform)
 	{
 		// Each entity added need to reset size and radius
 		// next time getRadius and getSize are asked, they're computed.
@@ -504,23 +504,23 @@ namespace BtOgre {
 		if (mesh->hasSkeleton ())
 			Ogre::LogManager::getSingleton().logMessage("MeshToShapeConverter::addMesh : Mesh " + mesh->getName () + " as skeleton but added to trimesh non animated");
 
-		if (mesh->sharedVertexData)
+		if (mesh->sharedVertexData[0])
 		{
-			VertexIndexToShape::addStaticVertexData (mesh->sharedVertexData);
+			VertexIndexToShape::addStaticVertexData (mesh->sharedVertexData[0]);
 		}
 
 		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
 		{
-			SubMesh *sub_mesh = mesh->getSubMesh(i);
+			v1::SubMesh *sub_mesh = mesh->getSubMesh(i);
 
 			if (!sub_mesh->useSharedVertices)
 			{
-				VertexIndexToShape::addIndexData(sub_mesh->indexData, mVertexCount);
-				VertexIndexToShape::addStaticVertexData (sub_mesh->vertexData);
+				VertexIndexToShape::addIndexData(sub_mesh->indexData[0], mVertexCount);
+				VertexIndexToShape::addStaticVertexData (sub_mesh->vertexData[0]);
 			}
 			else
 			{
-				VertexIndexToShape::addIndexData (sub_mesh->indexData);
+				VertexIndexToShape::addIndexData (sub_mesh->indexData[0]);
 			}
 
 		}
@@ -532,7 +532,7 @@ namespace BtOgre {
  * =============================================================================================
  */
 
-	AnimatedMeshToShapeConverter::AnimatedMeshToShapeConverter(Entity *entity,const Matrix4 &transform) :
+	AnimatedMeshToShapeConverter::AnimatedMeshToShapeConverter(v1::Entity *entity,const Matrix4 &transform) :
 	VertexIndexToShape(transform),
 	mEntity (0),
 	mNode (0),
@@ -556,7 +556,7 @@ namespace BtOgre {
 		delete[] mTransformedVerticesTemp;
 	}
 	//------------------------------------------------------------------------------------------------
-	void AnimatedMeshToShapeConverter::addEntity(Entity *entity,const Matrix4 &transform)
+	void AnimatedMeshToShapeConverter::addEntity(v1::Entity *entity,const Matrix4 &transform)
 	{
 		// Each entity added need to reset size and radius
 		// next time getRadius and getSize are asked, they're computed.
@@ -572,28 +572,28 @@ namespace BtOgre {
 		mEntity->addSoftwareAnimationRequest(false);
 		mEntity->_updateAnimation();
 
-		if (mEntity->getMesh()->sharedVertexData)
+		if (mEntity->getMesh()->sharedVertexData[0])
 		{
-			VertexIndexToShape::addAnimatedVertexData (mEntity->getMesh()->sharedVertexData,
+			VertexIndexToShape::addAnimatedVertexData (mEntity->getMesh()->sharedVertexData[0],
 				mEntity->_getSkelAnimVertexData(),
 				&mEntity->getMesh()->sharedBlendIndexToBoneIndexMap);
 		}
 
 		for (unsigned int i = 0;i < mEntity->getNumSubEntities();++i)
 		{
-			SubMesh *sub_mesh = mEntity->getSubEntity(i)->getSubMesh();
+			v1::SubMesh *sub_mesh = mEntity->getSubEntity(i)->getSubMesh();
 
 			if (!sub_mesh->useSharedVertices)
 			{
-				VertexIndexToShape::addIndexData(sub_mesh->indexData, mVertexCount);
+				VertexIndexToShape::addIndexData(sub_mesh->indexData[0], mVertexCount);
 
-				VertexIndexToShape::addAnimatedVertexData (sub_mesh->vertexData,
+				VertexIndexToShape::addAnimatedVertexData (sub_mesh->vertexData[0],
 					mEntity->getSubEntity(i)->_getSkelAnimVertexData(),
 					&sub_mesh->blendIndexToBoneIndexMap);
 			}
 			else
 			{
-				VertexIndexToShape::addIndexData (sub_mesh->indexData);
+				VertexIndexToShape::addIndexData (sub_mesh->indexData[0]);
 			}
 
 		}
@@ -601,7 +601,7 @@ namespace BtOgre {
 		mEntity->removeSoftwareAnimationRequest(false);
 	}
 	//------------------------------------------------------------------------------------------------
-	void AnimatedMeshToShapeConverter::addMesh(const MeshPtr &mesh, const Matrix4 &transform)
+	void AnimatedMeshToShapeConverter::addMesh(const v1::MeshPtr &mesh, const Matrix4 &transform)
 	{
 		// Each entity added need to reset size and radius
 		// next time getRadius and getSize are asked, they're computed.
@@ -614,28 +614,28 @@ namespace BtOgre {
 
 		assert (mesh->hasSkeleton ());
 
-		if (mesh->sharedVertexData)
+		if (mesh->sharedVertexData[0])
 		{
-			VertexIndexToShape::addAnimatedVertexData (mesh->sharedVertexData,
+			VertexIndexToShape::addAnimatedVertexData (mesh->sharedVertexData[0],
 				0,
 				&mesh->sharedBlendIndexToBoneIndexMap);
 		}
 
 		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
 		{
-			SubMesh *sub_mesh = mesh->getSubMesh(i);
+			v1::SubMesh *sub_mesh = mesh->getSubMesh(i);
 
 			if (!sub_mesh->useSharedVertices)
 			{
-				VertexIndexToShape::addIndexData(sub_mesh->indexData, mVertexCount);
+				VertexIndexToShape::addIndexData(sub_mesh->indexData[0], mVertexCount);
 
-				VertexIndexToShape::addAnimatedVertexData (sub_mesh->vertexData,
+				VertexIndexToShape::addAnimatedVertexData (sub_mesh->vertexData[0],
 					0,
 					&sub_mesh->blendIndexToBoneIndexMap);
 			}
 			else
 			{
-				VertexIndexToShape::addIndexData (sub_mesh->indexData);
+				VertexIndexToShape::addIndexData (sub_mesh->indexData[0]);
 			}
 
 		}
@@ -743,12 +743,12 @@ namespace BtOgre {
 		Quaternion orient = boneOrientation;
 		orient.ToAxes(box_akAxis);
 
-		// Let C be the box center and let U0, U1, and U2 be the box axes.  Each
+		// Let C be the box center and let U0, U1, and U2 be the box axes. Each
 		// input point is of the form X = C + y0*U0 + y1*U1 + y2*U2.  The
 		// following code computes min(y0), max(y0), min(y1), max(y1), min(y2),
 		// and max(y2).  The box center is then adjusted to be
-		//   C' = C + 0.5*(min(y0)+max(y0))*U0 + 0.5*(min(y1)+max(y1))*U1 +
-		//        0.5*(min(y2)+max(y2))*U2
+		// C' = C + 0.5*(min(y0)+max(y0))*U0 + 0.5*(min(y1)+max(y1))*U1 +
+		//      0.5*(min(y2)+max(y2))*U2
 
 		Ogre::Vector3 kDiff (vertices[1] - box_kCenter);
 		Ogre::Real fY0Min = kDiff.dotProduct(box_akAxis[0]), fY0Max = fY0Min;
@@ -817,133 +817,133 @@ namespace BtOgre {
  * =============================================================================================
  */
 
-	DynamicRenderable::DynamicRenderable()
-	{
-	}
-	//------------------------------------------------------------------------------------------------
-	DynamicRenderable::~DynamicRenderable()
-	{
-	  delete mRenderOp.vertexData;
-	  delete mRenderOp.indexData;
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicRenderable::initialize(RenderOperation::OperationType operationType,
-									   bool useIndices)
-	{
-	  // Initialize render operation
-	  mRenderOp.operationType = operationType;
-	  mRenderOp.useIndexes = useIndices;
-	  mRenderOp.vertexData = new VertexData;
-	  if (mRenderOp.useIndexes)
-		mRenderOp.indexData = new IndexData;
-
-	  // Reset buffer capacities
-	  mVertexBufferCapacity = 0;
-	  mIndexBufferCapacity = 0;
-
-	  // Create vertex declaration
-	  createVertexDeclaration();
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicRenderable::prepareHardwareBuffers(size_t vertexCount,
-												   size_t indexCount)
-	{
-	  // Prepare vertex buffer
-	  size_t newVertCapacity = mVertexBufferCapacity;
-	  if ((vertexCount > mVertexBufferCapacity) ||
-		  (!mVertexBufferCapacity))
-	  {
-		// vertexCount exceeds current capacity!
-		// It is necessary to reallocate the buffer.
-
-		// Check if this is the first call
-		if (!newVertCapacity)
-		  newVertCapacity = 1;
-
-		// Make capacity the next power of two
-		while (newVertCapacity < vertexCount)
-		  newVertCapacity <<= 1;
-	  }
-	  else if (vertexCount < mVertexBufferCapacity>>1) {
-		// Make capacity the previous power of two
-		while (vertexCount < newVertCapacity>>1)
-		  newVertCapacity >>= 1;
-	  }
-	  if (newVertCapacity != mVertexBufferCapacity)
-	  {
-		mVertexBufferCapacity = newVertCapacity;
-		// Create new vertex buffer
-		HardwareVertexBufferSharedPtr vbuf =
-		  HardwareBufferManager::getSingleton().createVertexBuffer(
-			mRenderOp.vertexData->vertexDeclaration->getVertexSize(0),
-			mVertexBufferCapacity,
-			HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY); // TODO: Custom HBU_?
-
-		// Bind buffer
-		mRenderOp.vertexData->vertexBufferBinding->setBinding(0, vbuf);
-	  }
-	  // Update vertex count in the render operation
-	  mRenderOp.vertexData->vertexCount = vertexCount;
-
-	  if (mRenderOp.useIndexes)
-	  {
-		OgreAssert(indexCount <= std::numeric_limits<unsigned short>::max(), "indexCount exceeds 16 bit");
-
-		size_t newIndexCapacity = mIndexBufferCapacity;
-		// Prepare index buffer
-		if ((indexCount > newIndexCapacity) ||
-			(!newIndexCapacity))
-		{
-		  // indexCount exceeds current capacity!
-		  // It is necessary to reallocate the buffer.
-
-		  // Check if this is the first call
-		  if (!newIndexCapacity)
-			newIndexCapacity = 1;
-
-		  // Make capacity the next power of two
-		  while (newIndexCapacity < indexCount)
-			newIndexCapacity <<= 1;
-
-		}
-		else if (indexCount < newIndexCapacity>>1)
-		{
-		  // Make capacity the previous power of two
-		  while (indexCount < newIndexCapacity>>1)
-			newIndexCapacity >>= 1;
-		}
-
-		if (newIndexCapacity != mIndexBufferCapacity)
-		{
-		  mIndexBufferCapacity = newIndexCapacity;
-		  // Create new index buffer
-		  mRenderOp.indexData->indexBuffer =
-			HardwareBufferManager::getSingleton().createIndexBuffer(
-			  HardwareIndexBuffer::IT_16BIT,
-			  mIndexBufferCapacity,
-			  HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY); // TODO: Custom HBU_?
-		}
-
-		// Update index count in the render operation
-		mRenderOp.indexData->indexCount = indexCount;
-	  }
-	}
-	//------------------------------------------------------------------------------------------------
-	Real DynamicRenderable::getBoundingRadius(void) const
-	{
-	  return Math::Sqrt(std::max(mBox.getMaximum().squaredLength(), mBox.getMinimum().squaredLength()));
-	}
-	//------------------------------------------------------------------------------------------------
-	Real DynamicRenderable::getSquaredViewDepth(const Camera* cam) const
-	{
-	   Vector3 vMin, vMax, vMid, vDist;
-	   vMin = mBox.getMinimum();
-	   vMax = mBox.getMaximum();
-	   vMid = ((vMax - vMin) * 0.5) + vMin;
-	   vDist = cam->getDerivedPosition() - vMid;
-
-	   return vDist.squaredLength();
-	}
+	// DynamicRenderable::DynamicRenderable()
+	// {
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// DynamicRenderable::~DynamicRenderable()
+	// {
+	//   delete mRenderOp.vertexData;
+	//   delete mRenderOp.indexData;
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicRenderable::initialize(RenderOperation::OperationType operationType,
+	// 								   bool useIndices)
+	// {
+	//   // Initialize render operation
+	//   mRenderOp.operationType = operationType;
+	//   mRenderOp.useIndexes = useIndices;
+	//   mRenderOp.vertexData = new VertexData;
+	//   if (mRenderOp.useIndexes)
+	// 	mRenderOp.indexData = new IndexData;
+    //
+	//   // Reset buffer capacities
+	//   mVertexBufferCapacity = 0;
+	//   mIndexBufferCapacity = 0;
+    //
+	//   // Create vertex declaration
+	//   createVertexDeclaration();
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicRenderable::prepareHardwareBuffers(size_t vertexCount,
+	// 											   size_t indexCount)
+	// {
+	//   // Prepare vertex buffer
+	//   size_t newVertCapacity = mVertexBufferCapacity;
+	//   if ((vertexCount > mVertexBufferCapacity) ||
+	// 	  (!mVertexBufferCapacity))
+	//   {
+	// 	// vertexCount exceeds current capacity!
+	// 	// It is necessary to reallocate the buffer.
+    //
+	// 	// Check if this is the first call
+	// 	if (!newVertCapacity)
+	// 	  newVertCapacity = 1;
+    //
+	// 	// Make capacity the next power of two
+	// 	while (newVertCapacity < vertexCount)
+	// 	  newVertCapacity <<= 1;
+	//   }
+	//   else if (vertexCount < mVertexBufferCapacity>>1) {
+	// 	// Make capacity the previous power of two
+	// 	while (vertexCount < newVertCapacity>>1)
+	// 	  newVertCapacity >>= 1;
+	//   }
+	//   if (newVertCapacity != mVertexBufferCapacity)
+	//   {
+	// 	mVertexBufferCapacity = newVertCapacity;
+	// 	// Create new vertex buffer
+	// 	HardwareVertexBufferSharedPtr vbuf =
+	// 	  HardwareBufferManager::getSingleton().createVertexBuffer(
+	// 		mRenderOp.vertexData->vertexDeclaration->getVertexSize(0),
+	// 		mVertexBufferCapacity,
+	// 		HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY); // TODO: Custom HBU_?
+    //
+	// 	// Bind buffer
+	// 	mRenderOp.vertexData->vertexBufferBinding->setBinding(0, vbuf);
+	//   }
+	//   // Update vertex count in the render operation
+	//   mRenderOp.vertexData->vertexCount = vertexCount;
+    //
+	//   if (mRenderOp.useIndexes)
+	//   {
+	// 	OgreAssert(indexCount <= std::numeric_limits<unsigned short>::max(), "indexCount exceeds 16 bit");
+    //
+	// 	size_t newIndexCapacity = mIndexBufferCapacity;
+	// 	// Prepare index buffer
+	// 	if ((indexCount > newIndexCapacity) ||
+	// 		(!newIndexCapacity))
+	// 	{
+	// 	  // indexCount exceeds current capacity!
+	// 	  // It is necessary to reallocate the buffer.
+    //
+	// 	  // Check if this is the first call
+	// 	  if (!newIndexCapacity)
+	// 		newIndexCapacity = 1;
+    //
+	// 	  // Make capacity the next power of two
+	// 	  while (newIndexCapacity < indexCount)
+	// 		newIndexCapacity <<= 1;
+    //
+	// 	}
+	// 	else if (indexCount < newIndexCapacity>>1)
+	// 	{
+	// 	  // Make capacity the previous power of two
+	// 	  while (indexCount < newIndexCapacity>>1)
+	// 		newIndexCapacity >>= 1;
+	// 	}
+    //
+	// 	if (newIndexCapacity != mIndexBufferCapacity)
+	// 	{
+	// 	  mIndexBufferCapacity = newIndexCapacity;
+	// 	  // Create new index buffer
+	// 	  mRenderOp.indexData->indexBuffer =
+	// 		HardwareBufferManager::getSingleton().createIndexBuffer(
+	// 		  HardwareIndexBuffer::IT_16BIT,
+	// 		  mIndexBufferCapacity,
+	// 		  HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY); // TODO: Custom HBU_?
+	// 	}
+    //
+	// 	// Update index count in the render operation
+	// 	mRenderOp.indexData->indexCount = indexCount;
+	//   }
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// Real DynamicRenderable::getBoundingRadius(void) const
+	// {
+	//   return Math::Sqrt(std::max(mBox.getMaximum().squaredLength(), mBox.getMinimum().squaredLength()));
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// Real DynamicRenderable::getSquaredViewDepth(const Camera* cam) const
+	// {
+	//    Vector3 vMin, vMax, vMid, vDist;
+	//    vMin = mBox.getMinimum();
+	//    vMax = mBox.getMaximum();
+	//    vMid = ((vMax - vMin) * 0.5) + vMin;
+	//    vDist = cam->getDerivedPosition() - vMid;
+    //
+	//    return vDist.squaredLength();
+	// }
 
 /*
  * =============================================================================================
@@ -951,125 +951,125 @@ namespace BtOgre {
  * =============================================================================================
  */
 
-	enum {
-	  POSITION_BINDING,
-	  TEXCOORD_BINDING
-	};
-	//------------------------------------------------------------------------------------------------
-	DynamicLines::DynamicLines(OperationType opType)
-	{
-	  initialize(opType,false);
-	  setMaterial("BaseWhiteNoLighting");
-	  mDirty = true;
-	}
-	//------------------------------------------------------------------------------------------------
-	DynamicLines::~DynamicLines()
-	{
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicLines::setOperationType(OperationType opType)
-	{
-	  mRenderOp.operationType = opType;
-	}
-	//------------------------------------------------------------------------------------------------
-	RenderOperation::OperationType DynamicLines::getOperationType() const
-	{
-	  return mRenderOp.operationType;
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicLines::addPoint(const Vector3 &p)
-	{
-	   mPoints.push_back(p);
-	   mDirty = true;
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicLines::addPoint(Real x, Real y, Real z)
-	{
-	   mPoints.push_back(Vector3(x,y,z));
-	   mDirty = true;
-	}
-	//------------------------------------------------------------------------------------------------
-	const Vector3& DynamicLines::getPoint(unsigned short index) const
-	{
-	   assert(index < mPoints.size() && "Point index is out of bounds!!");
-	   return mPoints[index];
-	}
-	//------------------------------------------------------------------------------------------------
-	unsigned short DynamicLines::getNumPoints(void) const
-	{
-	  return (unsigned short)mPoints.size();
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicLines::setPoint(unsigned short index, const Vector3 &value)
-	{
-	  assert(index < mPoints.size() && "Point index is out of bounds!!");
-
-	  mPoints[index] = value;
-	  mDirty = true;
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicLines::clear()
-	{
-	  mPoints.clear();
-	  mDirty = true;
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicLines::update()
-	{
-	  if (mDirty) fillHardwareBuffers();
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicLines::createVertexDeclaration()
-	{
-	  VertexDeclaration *decl = mRenderOp.vertexData->vertexDeclaration;
-	  decl->addElement(POSITION_BINDING, 0, VET_FLOAT3, VES_POSITION);
-	}
-	//------------------------------------------------------------------------------------------------
-	void DynamicLines::fillHardwareBuffers()
-	{
-	  int size = mPoints.size();
-
-	  prepareHardwareBuffers(size,0);
-
-	  if (!size) {
-		mBox.setExtents(Vector3::ZERO,Vector3::ZERO);
-		mDirty=false;
-		return;
-	  }
-
-	  Vector3 vaabMin = mPoints[0];
-	  Vector3 vaabMax = mPoints[0];
-
-	  HardwareVertexBufferSharedPtr vbuf =
-		mRenderOp.vertexData->vertexBufferBinding->getBuffer(0);
-
-	  Real *prPos = static_cast<Real*>(vbuf->lock(HardwareBuffer::HBL_DISCARD));
-	  {
-	   for(int i = 0; i < size; i++)
-	   {
-		  *prPos++ = mPoints[i].x;
-		  *prPos++ = mPoints[i].y;
-		  *prPos++ = mPoints[i].z;
-
-		  if(mPoints[i].x < vaabMin.x)
-			 vaabMin.x = mPoints[i].x;
-		  if(mPoints[i].y < vaabMin.y)
-			 vaabMin.y = mPoints[i].y;
-		  if(mPoints[i].z < vaabMin.z)
-			 vaabMin.z = mPoints[i].z;
-
-		  if(mPoints[i].x > vaabMax.x)
-			 vaabMax.x = mPoints[i].x;
-		  if(mPoints[i].y > vaabMax.y)
-			 vaabMax.y = mPoints[i].y;
-		  if(mPoints[i].z > vaabMax.z)
-			 vaabMax.z = mPoints[i].z;
-	   }
-	  }
-	  vbuf->unlock();
-
-	  mBox.setExtents(vaabMin, vaabMax);
-
-	  mDirty = false;
-	}
+	// enum {
+	//   POSITION_BINDING,
+	//   TEXCOORD_BINDING
+	// };
+	// //------------------------------------------------------------------------------------------------
+	// DynamicLines::DynamicLines(OperationType opType)
+	// {
+	//   initialize(opType,false);
+	//   setMaterial("BaseWhiteNoLighting");
+	//   mDirty = true;
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// DynamicLines::~DynamicLines()
+	// {
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicLines::setOperationType(OperationType opType)
+	// {
+	//   mRenderOp.operationType = opType;
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// RenderOperation::OperationType DynamicLines::getOperationType() const
+	// {
+	//   return mRenderOp.operationType;
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicLines::addPoint(const Vector3 &p)
+	// {
+	//    mPoints.push_back(p);
+	//    mDirty = true;
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicLines::addPoint(Real x, Real y, Real z)
+	// {
+	//    mPoints.push_back(Vector3(x,y,z));
+	//    mDirty = true;
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// const Vector3& DynamicLines::getPoint(unsigned short index) const
+	// {
+	//    assert(index < mPoints.size() && "Point index is out of bounds!!");
+	//    return mPoints[index];
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// unsigned short DynamicLines::getNumPoints(void) const
+	// {
+	//   return (unsigned short)mPoints.size();
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicLines::setPoint(unsigned short index, const Vector3 &value)
+	// {
+	//   assert(index < mPoints.size() && "Point index is out of bounds!!");
+    //
+	//   mPoints[index] = value;
+	//   mDirty = true;
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicLines::clear()
+	// {
+	//   mPoints.clear();
+	//   mDirty = true;
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicLines::update()
+	// {
+	//   if (mDirty) fillHardwareBuffers();
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicLines::createVertexDeclaration()
+	// {
+	//   VertexDeclaration *decl = mRenderOp.vertexData->vertexDeclaration;
+	//   decl->addElement(POSITION_BINDING, 0, VET_FLOAT3, VES_POSITION);
+	// }
+	// //------------------------------------------------------------------------------------------------
+	// void DynamicLines::fillHardwareBuffers()
+	// {
+	//   int size = mPoints.size();
+    //
+	//   prepareHardwareBuffers(size,0);
+    //
+	//   if (!size) {
+	// 	mBox.setExtents(Vector3::ZERO,Vector3::ZERO);
+	// 	mDirty=false;
+	// 	return;
+	//   }
+    //
+	//   Vector3 vaabMin = mPoints[0];
+	//   Vector3 vaabMax = mPoints[0];
+    //
+	//   HardwareVertexBufferSharedPtr vbuf =
+	// 	mRenderOp.vertexData->vertexBufferBinding->getBuffer(0);
+    //
+	//   Real *prPos = static_cast<Real*>(vbuf->lock(HardwareBuffer::HBL_DISCARD));
+	//   {
+	//    for(int i = 0; i < size; i++)
+	//    {
+	// 	  *prPos++ = mPoints[i].x;
+	// 	  *prPos++ = mPoints[i].y;
+	// 	  *prPos++ = mPoints[i].z;
+    //
+	// 	  if(mPoints[i].x < vaabMin.x)
+	// 		 vaabMin.x = mPoints[i].x;
+	// 	  if(mPoints[i].y < vaabMin.y)
+	// 		 vaabMin.y = mPoints[i].y;
+	// 	  if(mPoints[i].z < vaabMin.z)
+	// 		 vaabMin.z = mPoints[i].z;
+    //
+	// 	  if(mPoints[i].x > vaabMax.x)
+	// 		 vaabMax.x = mPoints[i].x;
+	// 	  if(mPoints[i].y > vaabMax.y)
+	// 		 vaabMax.y = mPoints[i].y;
+	// 	  if(mPoints[i].z > vaabMax.z)
+	// 		 vaabMax.z = mPoints[i].z;
+	//    }
+	//   }
+	//   vbuf->unlock();
+    //
+	//   mBox.setExtents(vaabMin, vaabMax);
+    //
+	//   mDirty = false;
+	// }
 }
