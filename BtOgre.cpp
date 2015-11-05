@@ -443,6 +443,14 @@ namespace BtOgre {
 		addEntity(entity, transform);
 	}
 	//------------------------------------------------------------------------------------------------
+	StaticMeshToShapeConverter::StaticMeshToShapeConverter(v1::Mesh *mesh, const Ogre::Matrix4 &transform) :
+		VertexIndexToShape(transform),
+		mEntity(0),
+		mNode(0)
+	{
+		addMesh(mesh, transform);
+	}
+	//------------------------------------------------------------------------------------------------
 	StaticMeshToShapeConverter::StaticMeshToShapeConverter(Renderable *rend, const Matrix4 &transform) :
 		VertexIndexToShape(transform),
 		mEntity (0),
